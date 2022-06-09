@@ -4,11 +4,28 @@ import (
 	"boilerplate/internal/user/dao"
 	"context"
 	application "github.com/debugger84/modulus-application"
+	validator "github.com/debugger84/modulus-validator-ozzo"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"net/http"
 )
 
 type GetUsersRequest struct {
 	Count int `json:"count" validate:"required,gte=0,lte=10"`
+}
+
+func (u *GetUsersRequest) Validate(ctx context.Context) []application.ValidationError {
+	err := validation.ValidateStructWithContext(
+		ctx,
+		&u,
+		validation.Field(
+			&u.Count,
+			validation.Required.Error("Count parameter is required"),
+			validation.Min(0).Error("Count parameter should be positive"),
+			validation.Max(10).Error("Count parameter should be less or equal to 10"),
+		),
+	)
+
+	return validator.AsAppValidationErrors(err)
 }
 
 type UsersResponse struct {
@@ -25,9 +42,11 @@ func NewGetUsersAction(runner *application.ActionRunner, finder *dao.UserFinder)
 }
 
 func (a *GetUsersAction) Handle(w http.ResponseWriter, r *http.Request) {
-	a.runner.Run(w, r, func(ctx context.Context, request any) application.ActionResponse {
-		return a.process(ctx, request.(*GetUsersRequest))
-	}, &GetUsersRequest{})
+	a.runner.Run(
+		w, r, func(ctx context.Context, request any) application.ActionResponse {
+			return a.process(ctx, request.(*GetUsersRequest))
+		}, &GetUsersRequest{},
+	)
 }
 
 func (a *GetUsersAction) process(ctx context.Context, request *GetUsersRequest) application.ActionResponse {
@@ -39,7 +58,9 @@ func (a *GetUsersAction) process(ctx context.Context, request *GetUsersRequest) 
 		response[i] = UserResponse{Id: user.Id, Name: user.Name}
 	}
 
-	return application.NewSuccessResponse(UsersResponse{
-		List: response,
-	})
+	return application.NewSuccessResponse(
+		UsersResponse{
+			List: response,
+		},
+	)
 }

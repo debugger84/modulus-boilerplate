@@ -3,6 +3,7 @@ package resolver
 //go:generate go run github.com/99designs/gqlgen generate
 
 import (
+	"boilerplate/internal/graph/generated"
 	userResolver "boilerplate/internal/user/resolver"
 	application "github.com/debugger84/modulus-application"
 )
@@ -27,4 +28,8 @@ func NewResolver(
 		userMutation: userMutation,
 		logger:       logger,
 	}
+}
+
+func (r Resolver) GetDirectives() generated.DirectiveRoot {
+	return generated.DirectiveRoot{}
 }

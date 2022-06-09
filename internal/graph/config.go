@@ -18,8 +18,9 @@ func NewModuleConfig() *ModuleConfig {
 func (s *ModuleConfig) ProvidedServices() []interface{} {
 	return []interface{}{
 		resolver.NewResolver,
+
 		func(resolverObj *resolver.Resolver) graphql.ExecutableSchema {
-			c := generated.Config{Resolvers: resolverObj}
+			c := generated.Config{Resolvers: resolverObj, Directives: resolverObj.GetDirectives()}
 
 			return generated.NewExecutableSchema(c)
 		},

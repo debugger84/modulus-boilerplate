@@ -4,6 +4,7 @@ import (
 	action2 "boilerplate/internal/user/action"
 	"boilerplate/internal/user/dao"
 	"boilerplate/internal/user/resolver"
+	"boilerplate/internal/user/resolver/validator"
 	"boilerplate/internal/user/service"
 	application "github.com/debugger84/modulus-application"
 	"go.uber.org/dig"
@@ -31,6 +32,7 @@ func (s *ModuleConfig) ProvidedServices() []interface{} {
 
 		resolver.NewQueryResolver,
 		resolver.NewMutationResolver,
+		validator.NewUserValidator,
 
 		service.NewRegistration,
 	}
@@ -42,9 +44,11 @@ func (s *ModuleConfig) SetContainer(container *dig.Container) {
 
 func (s *ModuleConfig) ModuleRoutes() []application.RouteInfo {
 	var moduleActions *ModuleActions
-	err := s.container.Invoke(func(dep *ModuleActions) {
-		moduleActions = dep
-	})
+	err := s.container.Invoke(
+		func(dep *ModuleActions) {
+			moduleActions = dep
+		},
+	)
 	if err != nil {
 		panic("cannot instantiate module dependencies" + err.Error())
 	}
