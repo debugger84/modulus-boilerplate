@@ -2,21 +2,15 @@ module boilerplate
 
 go 1.18
 
-//replace github.com/debugger84/modulus-application => ../modulus
-//
-//replace github.com/debugger84/modulus-graphql => ../modulus-graphql
-
-//replace github.com/debugger84/modulus-logger-zap => ../modulus-logger
-//
-//replace github.com/debugger84/modulus-router-httprouter => ../modulus-router
-
 require (
 	github.com/99designs/gqlgen v0.17.9
-	github.com/debugger84/modulus-application v0.0.4
+	github.com/debugger84/modulus-application v0.0.5
 	github.com/debugger84/modulus-db-pg-gorm v0.0.1
-	github.com/debugger84/modulus-graphql v0.0.2
+	github.com/debugger84/modulus-graphql v0.0.3
 	github.com/debugger84/modulus-logger-zap v0.0.1
 	github.com/debugger84/modulus-router-httprouter v0.0.1
+	github.com/debugger84/modulus-validator-ozzo v0.0.1
+	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gofrs/uuid v4.2.0+incompatible
 	github.com/vektah/gqlparser/v2 v2.4.4
 	github.com/vektra/mockery/v2 v2.12.3
@@ -26,6 +20,7 @@ require (
 
 require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
+	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect

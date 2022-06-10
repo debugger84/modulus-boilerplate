@@ -8,8 +8,8 @@ import (
 	"context"
 )
 
-func (r *mutationResolver) Register(ctx context.Context, email string, name string) (*model.User, error) {
-	return r.userMutation.Register(ctx, email, name)
+func (r *mutationResolver) Register(ctx context.Context, request model.RegisterRequest) (*model.User, error) {
+	return r.userMutation.Register(ctx, request)
 }
 
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {

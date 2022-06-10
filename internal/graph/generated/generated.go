@@ -46,7 +46,7 @@ type DirectiveRoot struct {
 type ComplexityRoot struct {
 	Mutation struct {
 		Ping     func(childComplexity int) int
-		Register func(childComplexity int, email string, name string) int
+		Register func(childComplexity int, request model.RegisterRequest) int
 	}
 
 	Query struct {
@@ -63,7 +63,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	Ping(ctx context.Context) (string, error)
-	Register(ctx context.Context, email string, name string) (*model.User, error)
+	Register(ctx context.Context, request model.RegisterRequest) (*model.User, error)
 }
 type QueryResolver interface {
 	Ping(ctx context.Context) (string, error)
@@ -102,7 +102,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.Register(childComplexity, args["email"].(string), args["name"].(string)), true
+		return e.complexity.Mutation.Register(childComplexity, args["request"].(model.RegisterRequest)), true
 
 	case "Query.ping":
 		if e.complexity.Query.Ping == nil {
@@ -151,7 +151,9 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e}
-	inputUnmarshalMap := graphql.BuildUnmarshalerMap()
+	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputRegisterRequest,
+	)
 	first := true
 
 	switch rc.Operation.Operation {
@@ -221,13 +223,20 @@ type Query {
 }
 type Mutation {
     ping:String!
-}`, BuiltIn: false},
+}
+
+scalar Upload`, BuiltIn: false},
 	{Name: "../../user/user.graphql", Input: `
 extend type Query {
     user(id: String!): User
 }
 extend type Mutation {
-    register(email: String!, name: String!): User
+    register(request: RegisterRequest!): User
+}
+
+input RegisterRequest {
+    email: String!
+    name: String!
 }
 
 type User {
@@ -245,24 +254,15 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_register_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["email"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 model.RegisterRequest
+	if tmp, ok := rawArgs["request"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
+		arg0, err = ec.unmarshalNRegisterRequest2boilerplateᚋinternalᚋgraphᚋmodelᚐRegisterRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["email"] = arg0
-	var arg1 string
-	if tmp, ok := rawArgs["name"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
-		arg1, err = ec.unmarshalNString2string(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["name"] = arg1
+	args["request"] = arg0
 	return args, nil
 }
 
@@ -392,7 +392,7 @@ func (ec *executionContext) _Mutation_register(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().Register(rctx, fc.Args["email"].(string), fc.Args["name"].(string))
+		return ec.resolvers.Mutation().Register(rctx, fc.Args["request"].(model.RegisterRequest))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2576,6 +2576,37 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(ctx context.Conte
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputRegisterRequest(ctx context.Context, obj interface{}) (model.RegisterRequest, error) {
+	var it model.RegisterRequest
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "email":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+			it.Email, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -3087,6 +3118,11 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNRegisterRequest2boilerplateᚋinternalᚋgraphᚋmodelᚐRegisterRequest(ctx context.Context, v interface{}) (model.RegisterRequest, error) {
+	res, err := ec.unmarshalInputRegisterRequest(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

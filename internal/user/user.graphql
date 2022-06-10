@@ -3,7 +3,12 @@ extend type Query {
     user(id: String!): User
 }
 extend type Mutation {
-    register(email: String!, name: String!): User
+    register(request: RegisterRequest!): User
+}
+
+input RegisterRequest {
+    email: String!
+    name: String!
 }
 
 type User {
