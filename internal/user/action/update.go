@@ -10,11 +10,6 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-//type UpdateRequest struct {
-//	Id   string `json:"id"`
-//	Name string `json:"name"`
-//}
-
 func (u *UpdateRequest) Validate(ctx context.Context) []application.ValidationError {
 	err := validation.ValidateStructWithContext(
 		ctx,
@@ -31,12 +26,6 @@ func (u *UpdateRequest) Validate(ctx context.Context) []application.ValidationEr
 
 	return validator.AsAppValidationErrors(err)
 }
-
-//
-//type UpdateResponse struct {
-//	Id   string `json:"id"`
-//	Name string `json:"name"`
-//}
 
 type Update struct {
 	finder *dao.UserFinder
