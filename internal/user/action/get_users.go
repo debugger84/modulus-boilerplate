@@ -9,6 +9,11 @@ import (
 	"net/http"
 )
 
+type UserResponse struct {
+	Id   string
+	Name string
+}
+
 type GetUsersRequest struct {
 	Count int `json:"count" validate:"required,gte=0,lte=10"`
 }

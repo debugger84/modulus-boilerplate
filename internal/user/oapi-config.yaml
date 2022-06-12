@@ -1,0 +1,10 @@
+output:
+  ./internal/user/action/actions_gen.go
+package: action
+generate:
+  models: true
+  modulus-actions: true
+output-options:
+  skip-prune: true
+#import-mapping:
+#  ../user/user.yaml: boilerplate/user

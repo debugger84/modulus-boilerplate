@@ -1,7 +1,7 @@
 package user
 
 import (
-	action2 "boilerplate/internal/user/action"
+	"boilerplate/internal/user/action"
 	"boilerplate/internal/user/dao"
 	"boilerplate/internal/user/resolver"
 	"boilerplate/internal/user/resolver/validator"
@@ -19,23 +19,27 @@ func NewModuleConfig() *ModuleConfig {
 }
 
 func (s *ModuleConfig) ProvidedServices() []interface{} {
-	return []interface{}{
-		action2.NewRegisterAction,
-		action2.NewGetUserAction,
-		action2.NewGetUsersAction,
-		action2.NewUpdateAction,
+	return append(
+		action.ServiceProviders(),
+		[]interface{}{
+			action.NewRegisterAction,
+			action.NewGetUsersAction,
 
-		dao.NewUserFinder,
-		dao.NewUserSaver,
+			action.NewGetUserProcessor,
+			action.NewUpdateProcessor,
 
-		NewModuleActions,
+			dao.NewUserFinder,
+			dao.NewUserSaver,
 
-		resolver.NewQueryResolver,
-		resolver.NewMutationResolver,
-		validator.NewUserValidator,
+			NewModuleActions,
 
-		service.NewRegistration,
-	}
+			resolver.NewQueryResolver,
+			resolver.NewMutationResolver,
+			validator.NewUserValidator,
+
+			service.NewRegistration,
+		}...,
+	)
 }
 
 func (s *ModuleConfig) SetContainer(container *dig.Container) {
@@ -43,8 +47,18 @@ func (s *ModuleConfig) SetContainer(container *dig.Container) {
 }
 
 func (s *ModuleConfig) ModuleRoutes() []application.RouteInfo {
-	var moduleActions *ModuleActions
+	var genModuleActions *action.ModuleActions
 	err := s.container.Invoke(
+		func(dep *action.ModuleActions) {
+			genModuleActions = dep
+		},
+	)
+	if err != nil {
+		panic("cannot instantiate module dependencies" + err.Error())
+	}
+
+	var moduleActions *ModuleActions
+	err = s.container.Invoke(
 		func(dep *ModuleActions) {
 			moduleActions = dep
 		},
@@ -52,5 +66,6 @@ func (s *ModuleConfig) ModuleRoutes() []application.RouteInfo {
 	if err != nil {
 		panic("cannot instantiate module dependencies" + err.Error())
 	}
-	return moduleActions.Routes()
+
+	return append(genModuleActions.Routes(), moduleActions.Routes()...)
 }

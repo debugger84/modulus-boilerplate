@@ -16,7 +16,7 @@ type User struct {
 func IdRules() []validation.Rule {
 	return []validation.Rule{
 		validation.Required.Error("Id is required."),
-		is.UUIDv4.Error("Id is not valid UUID4."),
+		is.UUID.Error("Id is not valid UUID4."),
 	}
 }
 
