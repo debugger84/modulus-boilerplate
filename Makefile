@@ -10,6 +10,7 @@ help: ## Commands list
 
 generate: ## Generate public graphql schema
 	go run github.com/99designs/gqlgen generate --config gqlgen.yml
+	go run github.com/debugger84/oapi-codegen/cmd/oapi-codegen -config ./internal/user/oapi-config.yaml ./internal/user/user.yaml
 
 
 install: ## Make a binary to ./bin folder

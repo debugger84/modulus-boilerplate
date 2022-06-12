@@ -1,0 +1,84 @@
+openapi: 3.0.3
+info:
+  title: User module
+  description: The REST API for the user module
+  version: 1.0.0
+servers:
+  - url: "http://localhost:8181"
+## components
+components:
+  ## response objects
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+  ## request objects
+  requestBodies:
+    UpdateUserBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+          example:
+            name: "Standard"
+            validFrom: "2021-01-01T00:00:00.000Z"
+            validTo: "2021-12-31T00:00:00.000Z"
+
+  ## path parameters
+  parameters:
+    userId:
+      in: path
+      description: User ID
+      name: id
+      required: true
+      schema:
+        type: string
+
+## paths
+paths:
+  "/users/{id}":
+    get:
+      operationId: GetUser
+      summary: Get a user
+      parameters:
+        - $ref: "#/components/parameters/userId"
+      responses:
+        "200":
+          description: One user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      operationId: Update
+      summary: Update a user
+      parameters:
+        - in: path
+          description: User ID
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/UpdateUserBody"
+
+      responses:
+        "200":
+          description: One user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'

@@ -11,9 +11,7 @@ type ModuleActions struct {
 
 func NewModuleActions(
 	registerAction *action2.RegisterAction,
-	getUserAction *action2.GetUserAction,
 	getUsersAction *action2.GetUsersAction,
-	updateAction *action2.UpdateAction,
 ) *ModuleActions {
 	routes := application.NewRoutes()
 	routes.Post(
@@ -23,12 +21,6 @@ func NewModuleActions(
 	routes.Get(
 		"/users",
 		getUsersAction.Handle,
-	)
-	routes.Get("/users/:id", getUserAction.Handle)
-
-	routes.Put(
-		"/users/:id",
-		updateAction.Handle,
 	)
 
 	return &ModuleActions{
