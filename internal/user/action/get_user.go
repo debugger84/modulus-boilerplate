@@ -2,7 +2,7 @@ package action
 
 import (
 	actionError "boilerplate/internal/user/action/errors"
-	"boilerplate/internal/user/dao"
+	"boilerplate/internal/user/db"
 	"boilerplate/internal/user/dto"
 	"context"
 	application "github.com/debugger84/modulus-application"
@@ -24,10 +24,10 @@ func (u *GetUserRequest) Validate(ctx context.Context) []application.ValidationE
 }
 
 type GetUser struct {
-	finder *dao.UserFinder
+	finder *db.UserFinder
 }
 
-func NewGetUserProcessor(finder *dao.UserFinder) GetUserProcessor {
+func NewGetUserProcessor(finder *db.UserFinder) GetUserProcessor {
 	return &GetUser{finder: finder}
 }
 

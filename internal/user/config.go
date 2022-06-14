@@ -2,7 +2,7 @@ package user
 
 import (
 	"boilerplate/internal/user/action"
-	"boilerplate/internal/user/dao"
+	"boilerplate/internal/user/db"
 	"boilerplate/internal/user/resolver"
 	"boilerplate/internal/user/resolver/validator"
 	"boilerplate/internal/user/service"
@@ -28,8 +28,8 @@ func (s *ModuleConfig) ProvidedServices() []interface{} {
 			action.NewGetUserProcessor,
 			action.NewUpdateProcessor,
 
-			dao.NewUserFinder,
-			dao.NewUserSaver,
+			db.NewUserFinder,
+			db.NewUserSaver,
 
 			NewModuleActions,
 

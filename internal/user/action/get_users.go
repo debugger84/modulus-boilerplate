@@ -1,7 +1,7 @@
 package action
 
 import (
-	"boilerplate/internal/user/dao"
+	"boilerplate/internal/user/db"
 	"context"
 	application "github.com/debugger84/modulus-application"
 	validator "github.com/debugger84/modulus-validator-ozzo"
@@ -39,10 +39,10 @@ type UsersResponse struct {
 
 type GetUsersAction struct {
 	runner *application.ActionRunner
-	finder *dao.UserFinder
+	finder *db.UserFinder
 }
 
-func NewGetUsersAction(runner *application.ActionRunner, finder *dao.UserFinder) *GetUsersAction {
+func NewGetUsersAction(runner *application.ActionRunner, finder *db.UserFinder) *GetUsersAction {
 	return &GetUsersAction{runner: runner, finder: finder}
 }
 
@@ -60,7 +60,7 @@ func (a *GetUsersAction) process(ctx context.Context, request *GetUsersRequest) 
 	users := a.finder.ListByQuery(query, request.Count)
 	response := make([]UserResponse, len(users))
 	for i, user := range users {
-		response[i] = UserResponse{Id: user.Id, Name: user.Name}
+		response[i] = UserResponse{Id: user.ID.String(), Name: user.Name}
 	}
 
 	return application.NewSuccessResponse(

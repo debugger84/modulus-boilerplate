@@ -33,9 +33,7 @@ components:
               name:
                 type: string
           example:
-            name: "Standard"
-            validFrom: "2021-01-01T00:00:00.000Z"
-            validTo: "2021-12-31T00:00:00.000Z"
+            name: "John Doe"
 
   ## path parameters
   parameters:
