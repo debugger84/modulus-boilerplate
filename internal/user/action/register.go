@@ -51,17 +51,18 @@ func (a *RegisterAction) Handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *RegisterAction) process(ctx context.Context, request *RegisterRequest) application.ActionResponse {
-	user := dto.User{
-		Name:  request.Name,
-		Email: request.Email,
-	}
-	result, err := a.registration.Register(ctx, user)
+	result, err := a.registration.Register(
+		ctx, service.RegisterRequest{
+			Name:  request.Name,
+			Email: request.Email,
+		},
+	)
 	if err != nil {
 		return application.NewUnprocessableEntityResponse(ctx, err)
 	}
 	return application.NewSuccessCreationResponse(
 		RegisterResponse{
-			Id: result.Id,
+			Id: result.ID.String(),
 		},
 	)
 }

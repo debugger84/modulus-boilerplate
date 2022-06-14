@@ -3,15 +3,7 @@ package dto
 import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
-	"time"
 )
-
-type User struct {
-	Id           string `gorm:"primarykey"`
-	Name         string
-	Email        string
-	RegisteredAt time.Time `gorm:"column:registered_at"`
-}
 
 func IdRules() []validation.Rule {
 	return []validation.Rule{

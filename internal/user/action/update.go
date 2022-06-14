@@ -2,7 +2,7 @@ package action
 
 import (
 	"boilerplate/internal/user/action/errors"
-	"boilerplate/internal/user/dao"
+	"boilerplate/internal/user/db"
 	"boilerplate/internal/user/dto"
 	"context"
 	application "github.com/debugger84/modulus-application"
@@ -28,14 +28,14 @@ func (u *UpdateRequest) Validate(ctx context.Context) []application.ValidationEr
 }
 
 type Update struct {
-	finder *dao.UserFinder
-	saver  *dao.UserSaver
+	finder *db.UserFinder
+	saver  *db.UserSaver
 	logger application.Logger
 }
 
 func NewUpdateProcessor(
-	finder *dao.UserFinder,
-	saver *dao.UserSaver,
+	finder *db.UserFinder,
+	saver *db.UserSaver,
 	logger application.Logger,
 ) UpdateProcessor {
 	return &Update{finder: finder, saver: saver, logger: logger}
@@ -60,10 +60,8 @@ func (a *Update) Process(ctx context.Context, request *UpdateRequest) applicatio
 	)
 }
 
-func (a *Update) getUser(ctx context.Context, id string) *dto.User {
-	query := a.finder.CreateQuery(ctx)
-	query.Id(id)
-	user := a.finder.OneByQuery(query)
+func (a *Update) getUser(ctx context.Context, id string) *db.User {
+	user := a.finder.One(ctx, id)
 
 	return user
 }

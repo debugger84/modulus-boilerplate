@@ -2,16 +2,16 @@ package resolver
 
 import (
 	"boilerplate/internal/graph/model"
-	"boilerplate/internal/user/dao"
+	"boilerplate/internal/user/db"
 	"context"
 	"errors"
 )
 
 type QueryResolver struct {
-	finder *dao.UserFinder
+	finder *db.UserFinder
 }
 
-func NewQueryResolver(finder *dao.UserFinder) *QueryResolver {
+func NewQueryResolver(finder *db.UserFinder) *QueryResolver {
 	return &QueryResolver{finder: finder}
 }
 

@@ -1,8 +1,7 @@
 package service
 
 import (
-	"boilerplate/internal/user/dao"
-	"boilerplate/internal/user/dto"
+	"boilerplate/internal/user/db"
 	"context"
 	application "github.com/debugger84/modulus-application"
 	"github.com/gofrs/uuid"
@@ -11,25 +10,37 @@ import (
 
 const emailExists application.ErrorIdentifier = "emailExists"
 
+type RegisterRequest struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
 type Registration struct {
-	finder *dao.UserFinder
-	saver  *dao.UserSaver
+	finder *db.UserFinder
+	saver  *db.UserSaver
 	logger application.Logger
 }
 
-func NewRegistration(finder *dao.UserFinder, saver *dao.UserSaver, logger application.Logger) *Registration {
+func NewRegistration(finder *db.UserFinder, saver *db.UserSaver, logger application.Logger) *Registration {
 	return &Registration{finder: finder, saver: saver, logger: logger}
 }
 
 // Register returns emailExists error
-func (r Registration) Register(ctx context.Context, user dto.User) (*dto.User, error) {
-	if r.emailExist(ctx, user.Email) {
+func (r Registration) Register(ctx context.Context, request RegisterRequest) (*db.User, error) {
+	if r.emailExist(ctx, request.Email) {
 		return nil, application.NewCommonError(emailExists, "not unique email")
 	}
 	id, _ := uuid.NewV6()
-	user.Id = id.String()
-	user.RegisteredAt = time.Now()
+	user := db.User{
+		ID:           id,
+		Name:         request.Name,
+		Email:        request.Email,
+		RegisteredAt: time.Now(),
+		Settings:     nil,
+		Contacts:     []string{"Contact 1"},
+	}
 
+	user.Settings = &db.Settings{Incognito: true}
 	err := r.saver.Create(ctx, user)
 	if err != nil {
 		r.logger.Error(ctx, err.Error())
