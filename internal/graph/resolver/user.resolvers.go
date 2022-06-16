@@ -15,3 +15,7 @@ func (r *mutationResolver) Register(ctx context.Context, request model.RegisterR
 func (r *queryResolver) User(ctx context.Context, id string) (*model.User, error) {
 	return r.userQuery.User(ctx, id)
 }
+
+func (r *queryResolver) Users(ctx context.Context, first int, after *string) (*model.UserList, error) {
+	return r.userQuery.Users(ctx, first, after)
+}

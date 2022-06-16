@@ -2,9 +2,9 @@ package resolver
 
 import (
 	"boilerplate/internal/graph/model"
-	"boilerplate/internal/user/dto"
 	"boilerplate/internal/user/resolver/validator"
 	"boilerplate/internal/user/service"
+	"boilerplate/internal/user/storage"
 	"context"
 )
 
@@ -22,7 +22,7 @@ func (r *MutationResolver) Register(ctx context.Context, request model.RegisterR
 	if err != nil {
 		return nil, err
 	}
-	user := dto.User{
+	user := storage.CreateUserParams{
 		Name:  request.Name,
 		Email: request.Email,
 	}
@@ -31,7 +31,7 @@ func (r *MutationResolver) Register(ctx context.Context, request model.RegisterR
 		return nil, err
 	}
 	return &model.User{
-		ID:    result.Id,
+		ID:    result.ID.String(),
 		Name:  result.Name,
 		Email: result.Email,
 	}, nil

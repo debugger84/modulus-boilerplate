@@ -2,13 +2,18 @@ package action
 
 import (
 	actionError "boilerplate/internal/user/action/errors"
-	"boilerplate/internal/user/dao"
 	"boilerplate/internal/user/dto"
+	"boilerplate/internal/user/storage"
 	"context"
+	"errors"
 	application "github.com/debugger84/modulus-application"
 	validator "github.com/debugger84/modulus-validator-ozzo"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/gofrs/uuid"
+	"github.com/jackc/pgx/v4"
 )
+
+const DbError application.ErrorIdentifier = "DbError"
 
 func (u *GetUserRequest) Validate(ctx context.Context) []application.ValidationError {
 	err := validation.ValidateStructWithContext(
@@ -24,17 +29,22 @@ func (u *GetUserRequest) Validate(ctx context.Context) []application.ValidationE
 }
 
 type GetUser struct {
-	finder *dao.UserFinder
+	finder *storage.Queries
 }
 
-func NewGetUserProcessor(finder *dao.UserFinder) GetUserProcessor {
+func NewGetUserProcessor(finder *storage.Queries) GetUserProcessor {
 	return &GetUser{finder: finder}
 }
 
 func (a *GetUser) Process(ctx context.Context, request *GetUserRequest) application.ActionResponse {
-	user := a.finder.One(ctx, request.Id)
-	if user == nil {
-		return actionError.UserNotFound(ctx, request.Id)
+	id, _ := uuid.FromString(request.Id)
+	user, err := a.finder.GetUser(ctx, id)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return actionError.UserNotFound(ctx, request.Id)
+		} else {
+			return application.NewServerErrorResponse(ctx, DbError, err)
+		}
 	}
 	var response User
 	response.Id = request.Id
