@@ -12,6 +12,37 @@ import (
 	"github.com/gofrs/uuid"
 )
 
+const getNewerUsers = `-- name: GetNewerUsers :many
+select id, name, email, registered_at, settings, contacts from "user"."user" order by "user".registered_at DESC LIMIT $1
+`
+
+func (q *Queries) GetNewerUsers(ctx context.Context, limit int32) ([]User, error) {
+	rows, err := q.db.Query(ctx, getNewerUsers, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Email,
+			&i.RegisteredAt,
+			&i.Settings,
+			&i.Contacts,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUser = `-- name: GetUser :one
 select id, name, email, registered_at, settings, contacts from "user"."user" where id = $1 LIMIT 1
 `
