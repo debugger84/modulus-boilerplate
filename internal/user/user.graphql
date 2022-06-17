@@ -1,6 +1,7 @@
 
 extend type Query {
     user(id: String!): User
+    users(first: Int!, after: String): UserList
 }
 extend type Mutation {
     register(request: RegisterRequest!): User
@@ -15,4 +16,15 @@ type User {
     id: String!
     email: String!
     name: String!
+}
+
+type UserEdge {
+    cursor: String!
+    node: User!
+}
+
+type UserList {
+    edges: [UserEdge!]!
+    endCursor: String!
+    hasNextPage: Boolean!
 }

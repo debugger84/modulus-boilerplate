@@ -6,7 +6,9 @@ import (
 	"boilerplate/internal/user/resolver"
 	"boilerplate/internal/user/resolver/validator"
 	"boilerplate/internal/user/service"
+	"boilerplate/internal/user/storage"
 	application "github.com/debugger84/modulus-application"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"go.uber.org/dig"
 )
 
@@ -38,6 +40,12 @@ func (s *ModuleConfig) ProvidedServices() []interface{} {
 			validator.NewUserValidator,
 
 			service.NewRegistration,
+			func(db *pgxpool.Pool) storage.DBTX {
+				return db
+			},
+			func(db storage.DBTX) *storage.Queries {
+				return storage.New(db)
+			},
 		}...,
 	)
 }

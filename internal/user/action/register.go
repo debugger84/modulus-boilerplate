@@ -3,6 +3,7 @@ package action
 import (
 	"boilerplate/internal/user/dto"
 	"boilerplate/internal/user/service"
+	"boilerplate/internal/user/storage"
 	"context"
 	application "github.com/debugger84/modulus-application"
 	validator "github.com/debugger84/modulus-validator-ozzo"
@@ -51,7 +52,7 @@ func (a *RegisterAction) Handle(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *RegisterAction) process(ctx context.Context, request *RegisterRequest) application.ActionResponse {
-	user := dto.User{
+	user := storage.CreateUserParams{
 		Name:  request.Name,
 		Email: request.Email,
 	}
@@ -61,7 +62,7 @@ func (a *RegisterAction) process(ctx context.Context, request *RegisterRequest) 
 	}
 	return application.NewSuccessCreationResponse(
 		RegisterResponse{
-			Id: result.Id,
+			Id: result.ID.String(),
 		},
 	)
 }

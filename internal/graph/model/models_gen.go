@@ -12,3 +12,14 @@ type User struct {
 	Email string `json:"email"`
 	Name  string `json:"name"`
 }
+
+type UserEdge struct {
+	Cursor string `json:"cursor"`
+	Node   *User  `json:"node"`
+}
+
+type UserList struct {
+	Edges       []*UserEdge `json:"edges"`
+	EndCursor   string      `json:"endCursor"`
+	HasNextPage bool        `json:"hasNextPage"`
+}

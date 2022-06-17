@@ -10,8 +10,12 @@ require (
 	github.com/debugger84/modulus-logger-zap v0.0.1
 	github.com/debugger84/modulus-router-httprouter v0.0.1
 	github.com/debugger84/modulus-validator-ozzo v0.0.1
+	github.com/debugger84/oapi-codegen v1.11.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gofrs/uuid v4.2.0+incompatible
+	github.com/jackc/pgconn v1.12.1
+	github.com/jackc/pgtype v1.11.0
+	github.com/jackc/pgx/v4 v4.16.1
 	github.com/vektah/gqlparser/v2 v2.4.4
 	github.com/vektra/mockery/v2 v2.12.3
 	go.uber.org/dig v1.12.0
@@ -22,8 +26,6 @@ require (
 	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200108200545-475eaeb16496 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
-	github.com/debugger84/oapi-codegen v1.11.5 // indirect
-	github.com/deepmap/oapi-codegen v1.11.1-0.20220609223533-7da811e1cf30 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/getkin/kin-openapi v0.94.0 // indirect
 	github.com/ghodss/yaml v1.0.0 // indirect
@@ -37,13 +39,11 @@ require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
-	github.com/jackc/pgconn v1.12.1 // indirect
 	github.com/jackc/pgio v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgproto3/v2 v2.3.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
-	github.com/jackc/pgtype v1.11.0 // indirect
-	github.com/jackc/pgx/v4 v4.16.1 // indirect
+	github.com/jackc/puddle v1.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/joho/godotenv v1.3.0 // indirect
@@ -88,5 +88,6 @@ require (
 	golang.org/x/xerrors v0.0.0-20220411194840-2f41105eb62f // indirect
 	gopkg.in/ini.v1 v1.66.3 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/driver/postgres v1.3.7 // indirect
 )

@@ -2,6 +2,7 @@ package main
 
 import (
 	graphInit "boilerplate/internal/graph"
+	"boilerplate/internal/pgx"
 	"boilerplate/internal/user"
 	"fmt"
 	application "github.com/debugger84/modulus-application"
@@ -31,14 +32,19 @@ func main() {
 	graphQlConfig := graphql.NewModuleConfig()
 	graphQlInitConfig := graphInit.NewModuleConfig()
 
-	app := application.New([]interface{}{
-		loggerConfig,
-		routerConfig,
-		dbConfig,
-		userConfig,
-		graphQlConfig,
-		graphQlInitConfig,
-	})
+	pgxConfig := pgx.NewModuleConfig()
+
+	app := application.New(
+		[]interface{}{
+			loggerConfig,
+			routerConfig,
+			dbConfig,
+			userConfig,
+			pgxConfig,
+			graphQlConfig,
+			graphQlInitConfig,
+		},
+	)
 	err := app.Run()
 	if err != nil {
 		panic("Cannot run application: " + err.Error())
