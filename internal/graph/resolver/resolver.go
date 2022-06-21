@@ -4,7 +4,9 @@ package resolver
 
 import (
 	"boilerplate/internal/graph/generated"
-	userResolver "boilerplate/internal/user/resolver"
+	post "boilerplate/internal/post/resolver"
+	user "boilerplate/internal/user/resolver"
+	"boilerplate/internal/user/storage/loader"
 	application "github.com/debugger84/modulus-application"
 )
 
@@ -14,19 +16,25 @@ import (
 
 type Resolver struct {
 	logger       application.Logger
-	userQuery    *userResolver.QueryResolver
-	userMutation *userResolver.MutationResolver
+	userQuery    *user.QueryResolver
+	userMutation *user.MutationResolver
+	postQuery    *post.QueryResolver
+	userLoader   *loader.UserLoader
 }
 
 func NewResolver(
 	logger application.Logger,
-	userQuery *userResolver.QueryResolver,
-	userMutation *userResolver.MutationResolver,
+	userQuery *user.QueryResolver,
+	userMutation *user.MutationResolver,
+	postQuery *post.QueryResolver,
+	userLoader *loader.UserLoader,
 ) *Resolver {
 	return &Resolver{
 		userQuery:    userQuery,
 		userMutation: userMutation,
 		logger:       logger,
+		postQuery:    postQuery,
+		userLoader:   userLoader,
 	}
 }
 

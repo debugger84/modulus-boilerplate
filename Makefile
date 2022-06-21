@@ -8,13 +8,26 @@ $(eval $(RUN_ARGS):;@:)
 help: ## Commands list
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-generate: ## Generate public graphql schema
-	go run github.com/99designs/gqlgen generate --config gqlgen.yml
-	go run github.com/debugger84/oapi-codegen/cmd/oapi-codegen -config ./internal/user/oapi-config.yaml ./internal/user/user.yaml
+generate: ## Generate all stuff
+	$(MAKE) generate-graphql
+	$(MAKE) generate-rest
 
+generate-graphql: ## Generate public graphql schema
+	go run github.com/99designs/gqlgen generate --config gqlgen.yml
+
+generate-rest: ## Generate public REST API fog a module
+	go run github.com/debugger84/oapi-codegen/cmd/oapi-codegen -config ./internal/user/oapi-config.yaml ./internal/user/user.yaml
+	go run github.com/debugger84/oapi-codegen/cmd/oapi-codegen -config ./internal/post/oapi-config.yaml ./internal/post/post.yaml
+
+generate-db: ## Generate public REST API fog a module
+	./sqlc -f ./internal/user/sqlc.yaml generate
+	./sqlc -f ./internal/post/sqlc.yaml generate
+
+generate-loaders:
+	cd ./internal/user/storage/loader && go run github.com/vektah/dataloaden UserLoader github.com/google/uuid.UUID boilerplate/internal/user/storage.User
 
 install: ## Make a binary to ./bin folder
-	go build -o ./bin/server  -i /cmd/server/main.go
+	go build -o ./bin/server  -i cmd/server/main.go
 
 analyze: ## Run static analyzer
 	test -s ./bin/golangci-lint || curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.45.0

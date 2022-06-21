@@ -9,40 +9,44 @@ servers:
 components:
   ## response objects
   schemas:
-    User:
+    Post:
       type: object
       required:
         - id
-        - name
+        - title
       properties:
         id:
           type: string
-        name:
+        title:
           type: string
-          description: "aaassdfasd "
+        author:
+          $ref: "../user/user.yaml#/components/schemas/User"
+    PostList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Post"
+
 
   ## request objects
   requestBodies:
-    UpdateUserBody:
+    CreatePostBody:
       content:
         application/json:
           schema:
             type: object
             required:
-              - name
+              - title
             properties:
-              name:
+              title:
                 type: string
           example:
-            name: "Standard"
-            validFrom: "2021-01-01T00:00:00.000Z"
-            validTo: "2021-12-31T00:00:00.000Z"
+            title: "The first post"
 
   ## path parameters
   parameters:
-    userId:
+    postId:
       in: path
-      description: User ID
+      description: Post ID
       name: id
       required: true
       schema:
@@ -50,36 +54,37 @@ components:
 
 ## paths
 paths:
-  "/users/{id}":
+  "/posts/{id}":
     get:
-      operationId: GetUser
-      summary: Get a user
+      operationId: GetPost
+      summary: Get a post
       parameters:
-        - $ref: "#/components/parameters/userId"
+        - $ref: "#/components/parameters/postId"
       responses:
         "200":
-          description: One user.
+          description: One post.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-    put:
-      operationId: Update
-      summary: Update a user
+                $ref: '#/components/schemas/Post'
+  "/posts":
+    get:
+      operationId: GetPostList
+      summary: Get a post
       parameters:
-        - in: path
-          description: User ID
-          name: id
-          required: true
+        - in: query
+          name: count
           schema:
-            type: string
-      requestBody:
-        $ref: "#/components/requestBodies/UpdateUserBody"
+            type: integer
+            default: 10
+            maximum: 100
+            minimum: 1
+          required: true
 
       responses:
         "200":
-          description: One user.
+          description: List of posts.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: '#/components/schemas/PostList'

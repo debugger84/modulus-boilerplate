@@ -6,7 +6,7 @@ import (
 	"boilerplate/internal/user/transformer"
 	"context"
 	"errors"
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 )
 
@@ -19,7 +19,7 @@ func NewQueryResolver(finder *storage.Queries) *QueryResolver {
 }
 
 func (r *QueryResolver) User(ctx context.Context, reqId string) (*model.User, error) {
-	id, _ := uuid.FromString(reqId)
+	id, _ := uuid.Parse(reqId)
 	user, err := r.finder.GetUser(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -44,7 +44,7 @@ func (r *QueryResolver) Users(ctx context.Context, first int, after *string) (*m
 			return nil, errors.New("db error")
 		}
 	} else {
-		id, _ := uuid.FromString(cursor.Id)
+		id, _ := uuid.Parse(cursor.Id)
 		users, err = r.finder.GetUsersAfterCursor(
 			ctx, storage.GetUsersAfterCursorParams{
 				RegisteredAt:   cursor.RegisteredAt,

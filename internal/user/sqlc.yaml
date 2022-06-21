@@ -1,7 +1,7 @@
 version: "2"
 sql:
-  - schema: "internal/user/storage/source/schema.sql"
-    queries: "internal/user/storage/source"
+  - schema: "storage/source/schema.sql"
+    queries: "storage/source"
     engine: "postgresql"
     default_schema: "user"
     gen:
@@ -14,10 +14,10 @@ sql:
         #emit_methods_with_db_argument: true
         emit_all_enum_values: true
         json_tags_case_style: "camel"
-        out: "internal/user/storage/"
+        out: "storage/"
         overrides:
-          - go_type: "github.com/gofrs/uuid.UUID"
-            db_type: "uuid"
+          - go_type: "github.com/jackc/pgtype.UUIDArray"
+            db_type: "uuid[]"
 #        overrides:
 #          - column: "user.user.settings"
 #            go_type: "boilerplate/internal/user/storage.Settings"

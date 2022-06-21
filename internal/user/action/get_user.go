@@ -9,7 +9,7 @@ import (
 	application "github.com/debugger84/modulus-application"
 	validator "github.com/debugger84/modulus-validator-ozzo"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
 )
 
@@ -37,7 +37,7 @@ func NewGetUserProcessor(finder *storage.Queries) GetUserProcessor {
 }
 
 func (a *GetUser) Process(ctx context.Context, request *GetUserRequest) application.ActionResponse {
-	id, _ := uuid.FromString(request.Id)
+	id, _ := uuid.Parse(request.Id)
 	user, err := a.finder.GetUser(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

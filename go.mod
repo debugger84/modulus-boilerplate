@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/99designs/gqlgen v0.17.9
+	github.com/allegro/bigcache/v3 v3.0.2
 	github.com/debugger84/modulus-application v0.0.5
 	github.com/debugger84/modulus-db-pg-gorm v0.0.1
 	github.com/debugger84/modulus-graphql v0.0.3
@@ -13,11 +14,16 @@ require (
 	github.com/debugger84/oapi-codegen v1.11.5
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/gofrs/uuid v4.2.0+incompatible
+	github.com/google/uuid v1.3.0
 	github.com/jackc/pgconn v1.12.1
 	github.com/jackc/pgtype v1.11.0
 	github.com/jackc/pgx/v4 v4.16.1
+	github.com/joho/godotenv v1.3.0
+	github.com/mitchellh/hashstructure/v2 v2.0.2
+	github.com/vektah/dataloaden v0.3.0
 	github.com/vektah/gqlparser/v2 v2.4.4
 	github.com/vektra/mockery/v2 v2.12.3
+	github.com/vikstrous/dataloadgen v0.0.3
 	go.uber.org/dig v1.12.0
 	gorm.io/gorm v1.23.5
 )
@@ -46,7 +52,6 @@ require (
 	github.com/jackc/puddle v1.2.1 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.4 // indirect
-	github.com/joho/godotenv v1.3.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/julienschmidt/httprouter v1.3.0 // indirect
 	github.com/labstack/echo/v4 v4.7.2 // indirect

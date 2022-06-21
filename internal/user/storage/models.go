@@ -7,7 +7,7 @@ package storage
 import (
 	"time"
 
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 	"github.com/jackc/pgtype"
 )
 

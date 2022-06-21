@@ -12,7 +12,9 @@ import (
 
 // User defines model for User.
 type User struct {
-	Id   string `json:"id"`
+	Id string `json:"id"`
+
+	// aaassdfasd
 	Name string `json:"name"`
 }
 

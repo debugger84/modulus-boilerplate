@@ -9,7 +9,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 )
 
 const getNewerUsers = `-- name: GetNewerUsers :many
@@ -83,6 +83,37 @@ func (q *Queries) GetUsersAfterCursor(ctx context.Context, arg GetUsersAfterCurs
 		arg.ID,
 		arg.Limit,
 	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Email,
+			&i.RegisteredAt,
+			&i.Settings,
+			&i.Contacts,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getUsersByIds = `-- name: GetUsersByIds :many
+select id, name, email, registered_at, settings, contacts from "user"."user" WHERE id = ANY ($1::uuid[])
+`
+
+func (q *Queries) GetUsersByIds(ctx context.Context, dollar_1 []uuid.UUID) ([]User, error) {
+	rows, err := q.db.Query(ctx, getUsersByIds, dollar_1)
 	if err != nil {
 		return nil, err
 	}

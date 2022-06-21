@@ -7,6 +7,7 @@ import (
 	"boilerplate/internal/user/resolver/validator"
 	"boilerplate/internal/user/service"
 	"boilerplate/internal/user/storage"
+	loader2 "boilerplate/internal/user/storage/loader"
 	application "github.com/debugger84/modulus-application"
 	"github.com/jackc/pgx/v4/pgxpool"
 	"go.uber.org/dig"
@@ -29,6 +30,11 @@ func (s *ModuleConfig) ProvidedServices() []interface{} {
 
 			action.NewGetUserProcessor,
 			action.NewUpdateProcessor,
+
+			loader2.NewUserLoaderConfig,
+			loader2.NewUserLoader,
+			loader2.NewUserLoaderGeneric,
+			loader2.NewUserLoaderCache,
 
 			dao.NewUserFinder,
 			dao.NewUserSaver,

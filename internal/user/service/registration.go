@@ -6,6 +6,7 @@ import (
 	"context"
 	application "github.com/debugger84/modulus-application"
 	"github.com/gofrs/uuid"
+	guid "github.com/google/uuid"
 )
 
 const emailExists application.ErrorIdentifier = "emailExists"
@@ -32,7 +33,7 @@ func (r Registration) Register(ctx context.Context, request storage.CreateUserPa
 		return nil, application.NewCommonError(emailExists, "not unique email")
 	}
 	id, _ := uuid.NewV6()
-	request.ID = id
+	request.ID = guid.UUID(id)
 
 	user, err := r.queries.CreateUser(ctx, request)
 	if err != nil {

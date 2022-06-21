@@ -13,3 +13,6 @@ where
     registered_at < $1 OR
     (registered_at = $2 AND id < $3)
 order by "user".registered_at DESC, "user".id DESC LIMIT $4;
+
+-- name: GetUsersByIds :many
+select * from "user"."user" WHERE id = ANY ($1::uuid[]);

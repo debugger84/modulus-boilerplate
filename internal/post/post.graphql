@@ -1,0 +1,31 @@
+
+extend type Query {
+    post(id: String!): Post
+    posts(count: Int!): [Post!]!
+}
+extend type Mutation {
+    createPost(request: CreatePostRequest!): Post
+}
+
+input CreatePostRequest {
+    title: String!
+}
+
+type Post {
+    id: String!
+    author: User! @goField(forceResolver: true)
+    title: String!
+    content: String
+    previewImage: String
+}
+
+type PostEdge {
+    cursor: String!
+    node: Post!
+}
+
+type PostList {
+    edges: [PostEdge!]!
+    endCursor: String!
+    hasNextPage: Boolean!
+}

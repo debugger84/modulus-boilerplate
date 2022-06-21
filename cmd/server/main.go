@@ -3,6 +3,7 @@ package main
 import (
 	graphInit "boilerplate/internal/graph"
 	"boilerplate/internal/pgx"
+	"boilerplate/internal/post"
 	"boilerplate/internal/user"
 	"fmt"
 	application "github.com/debugger84/modulus-application"
@@ -11,6 +12,7 @@ import (
 	logger "github.com/debugger84/modulus-logger-zap"
 	router "github.com/debugger84/modulus-router-httprouter"
 	"net/http"
+	"runtime"
 )
 
 func hello(w http.ResponseWriter, r *http.Request) {
@@ -18,9 +20,11 @@ func hello(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	runtime.GOMAXPROCS(24)
 	loggerConfig := logger.NewModuleConfig(nil)
 
 	userConfig := user.NewModuleConfig()
+	postConfig := post.NewModuleConfig()
 	routes := router.NewRoutes()
 	routes.Get("home", "/", hello)
 
@@ -43,6 +47,7 @@ func main() {
 			pgxConfig,
 			graphQlConfig,
 			graphQlInitConfig,
+			postConfig,
 		},
 	)
 	err := app.Run()
